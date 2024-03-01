@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routers.chat import chat_router
 
 
-app = FastAPI(title="Fishing 🎣")
+app = FastAPI(title="DSPy x FastAPI")
 
 environment = os.getenv("ENVIRONMENT", "dev")  # Default to 'development' if not set
 
