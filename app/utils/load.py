@@ -6,6 +6,7 @@ import chromadb
 from chromadb import Documents, EmbeddingFunction, Embeddings
 
 
+# Custom Embedding function that supports Ollama embeddings
 class OllamaEmbeddingFunction(EmbeddingFunction[Documents]):
     """
     This class is used to get embeddings for a list of texts using Ollama Python Library.

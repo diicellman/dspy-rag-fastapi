@@ -7,13 +7,14 @@ from app.utils.load import OllamaEmbeddingFunction
 
 from typing import Dict
 
+DATA_DIR = "data"
 # Global settings
 ollama_lm = dspy.OllamaLocal(model="phi:latest")
 ollama_embedding_function = OllamaEmbeddingFunction()
 
 retriever_model = ChromadbRM(
     "quickstart",
-    "../../data/chroma_db",
+    f"{DATA_DIR}/chroma_db",
     embedding_function=ollama_embedding_function,
     k=5,
 )
@@ -30,7 +31,7 @@ class GenerateAnswer(dspy.Signature):
 
 
 class RAG(dspy.Module):
-    def __init__(self, num_passages=3):
+    def __init__(self, num_passages=5):
         super().__init__()
 
         self.retrieve = dspy.Retrieve(k=num_passages)
@@ -40,6 +41,12 @@ class RAG(dspy.Module):
         context = self.retrieve(question).passages
         prediction = self.generate_answer(context=context, question=question)
         return dspy.Prediction(context=context, answer=prediction.answer)
+
+
+def validate_context_and_answer(example, pred, trace=None):
+    answer_EM = dspy.evaluate.answer_exact_match(example, pred)
+    answer_PM = dspy.evaluate.answer_passage_match(example, pred)
+    return answer_EM and answer_PM
 
 
 def compile_rag() -> Dict:
@@ -68,13 +75,13 @@ def compile_rag() -> Dict:
     ]
 
     # Set up a basic teleprompter, which will compile our RAG program.
-    teleprompter = BootstrapFewShot(metric=dspy.evaluate.answer_exact_match)
+    teleprompter = BootstrapFewShot(metric=validate_context_and_answer)
 
     # Compile!
     compiled_rag = teleprompter.compile(RAG(), trainset=trainset)
 
     # Saving
-    compiled_rag.save("../../data/checkpoints/compiled_rag.json")
+    compiled_rag.save(f"{DATA_DIR}/checkpoints/compiled_rag.json")
 
     return {"message": "Successfully compiled RAG program!"}
 
@@ -82,6 +89,6 @@ def compile_rag() -> Dict:
 def get_compiled_rag():
     # Loading:
     rag = RAG()
-    rag.load("../../data/checkpoints/compiled_rag.json")
+    rag.load(f"{DATA_DIR}/checkpoints/compiled_rag.json")
 
     return rag

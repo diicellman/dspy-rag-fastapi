@@ -1,0 +1,54 @@
+{
+  "retrieve": {
+    "k": 5
+  },
+  "generate_answer": {
+    "lm": null,
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "context": [
+          "What I Worked On\n\nFebruary 2021\n\nBefore college the two main things I worked on, outside of school, were writing and programming.",
+          "So now my three projects were reduced to two: writing essays and working on YC.",
+          "[8]\n\nThere were three main parts to the software: the editor, which people used to build sites and which I wrote, the shopping cart, which Robert wrote, and the manager, which kept track of orders and statistics, and which Trevor wrote.",
+          "I wrote what beginning writers were supposed to write then, and probably still are: short stories.",
+          "I kept writing essays through 2020, but I also started to think about other things I could work on."
+        ],
+        "question": "What were the two main things the author worked on before college?",
+        "rationale": "${answer}",
+        "answer": "Writing and programming."
+      },
+      {
+        "augmented": true,
+        "context": [
+          "Computers were expensive in those days and it took me years of nagging before I convinced my father to buy one, a TRS-80, in about 1980.",
+          "AI was in the air in the mid 1980s, but there were two things especially that made me want to work on it: a novel by Heinlein called The Moon is a Harsh Mistress, which featured an intelligent computer called Mike, and a PBS documentary that showed Terry Winograd using SHRDLU.",
+          "I wrote simple games, a program to predict how high my model rockets would fly, and a word processor that my father used to write at least one book.",
+          "[8]\n\nThere were three main parts to the software: the editor, which people used to build sites and which I wrote, the shopping cart, which Robert wrote, and the manager, which kept track of orders and statistics, and which Trevor wrote.",
+          "[1]\n\nThe first of my friends to get a microcomputer built it himself."
+        ],
+        "question": "What kind of computer did the author's father buy?",
+        "rationale": "${answer}",
+        "answer": "A TRS-80."
+      },
+      {
+        "question": "What was the author's original plan for college?",
+        "answer": "Study philosophy"
+      },
+      {
+        "question": "What was the first computer language the author learned?",
+        "answer": "Fortran"
+      },
+      {
+        "question": "What kind of writing did the author do before college?",
+        "answer": "Short stories"
+      }
+    ],
+    "signature_instructions": "Answer questions with short factoid answers.",
+    "signature_prefix": "Answer:",
+    "extended_signature_instructions": "Answer questions with short factoid answers.",
+    "extended_signature_prefix": "Answer:"
+  }
+}
