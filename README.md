@@ -58,7 +58,7 @@ This project is containerized with Docker, allowing for easy setup and deploymen
 docker build -t dspy-fastapi-wrapper .
 docker run -d --name dspy-wrapper -p 8000:8000 dspy-fastapi-wrapper
 ```
-This will build the Docker image for the FastAPI wrapper and run it as a container, exposing the application on port 80 of your host machine.
+This will build the Docker image for the FastAPI wrapper and run it as a container, exposing the application on port 8000 of your host machine.
 
 ## Usage
 
