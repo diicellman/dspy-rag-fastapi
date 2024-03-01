@@ -5,6 +5,9 @@ import re
 import chromadb
 from chromadb import Documents, EmbeddingFunction, Embeddings
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
+
 
 # Custom Embedding function that supports Ollama embeddings
 class OllamaEmbeddingFunction(EmbeddingFunction[Documents]):
@@ -52,7 +55,7 @@ def load_data() -> None:
     """
     Loads data from /data/example to Chroma Vector store.
     """
-    logger = logging.getLogger()
+
     logger.info("Loading data.")
     # Split document into single sentences
     chunks = []
