@@ -2,6 +2,7 @@
 
 import logging
 import os
+import re
 from typing import Dict
 import chromadb
 from chromadb import Documents, EmbeddingFunction, Embeddings
@@ -10,6 +11,11 @@ DATA_DIR = "data"
 
 
 class OllamaEmbeddingFunction(EmbeddingFunction[Documents]):
+    """
+    This class is used to get embeddings for a list of texts using Ollama Python Library.
+    It requires a host url and a model name. The default model name is "nomic-embed-text".
+    """
+
     def __init__(self, host: str, model_name: str = "nomic-embed-text"):
         try:
             import ollama
@@ -22,6 +28,18 @@ class OllamaEmbeddingFunction(EmbeddingFunction[Documents]):
         self._model_name = model_name
 
     def __call__(self, input: Documents) -> Embeddings:
+        """
+        Get the embeddings for a list of texts.
+        Args:
+            input (Documents): A list of texts to get embeddings for.
+        Returns:
+            Embeddings: The embeddings for the texts.
+        Example:
+            >>> ollama = OllamaEmbeddingFunction(host="http://localhost:11434")
+            >>> texts = ["Hello, world!", "How are you?"]
+            >>> embeddings = ollama(texts)
+        """
+
         embeddings = []
         # Call Ollama Embedding API for each document.
         for document in input:
@@ -31,7 +49,37 @@ class OllamaEmbeddingFunction(EmbeddingFunction[Documents]):
         return embeddings
 
 
-def load_data() -> Dict:
-    client = chromadb.PersistentClient(path=f"{DATA_DIR}/chroma_db")
+def load_data() -> None:
+    """
+    Loads data from /data/example to Chroma Vector store.
+    """
+    logger = logging.getLogger()
+    logger.info("Loading data.")
+    # Split document into single sentences
+    chunks = []
+    with open(
+        "../../data/example/paul_graham_essay.txt", "r", encoding="utf-8"
+    ) as file:
+        text = file.read()
+        sentences = re.split(r"(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s", text)
+        sentences = [sentence.strip() for sentence in sentences if sentence.strip()]
+        chunks.extend(sentences)
 
-    return None
+    logger.info("Creating embeddings.")
+    ollama_ef = OllamaEmbeddingFunction(host="http://localhost:11434")
+    chunks_embeddings = ollama_ef(chunks)
+
+    db = chromadb.PersistentClient(path="../../data/chroma_db")
+    chroma_collection = db.get_or_create_collection("quickstart")
+
+    logger.info("Loading data in Chroma.")
+    chroma_collection.add(
+        ids=[f"id{i}" for i in range(1, len(chunks) + 1)],
+        embeddings=chunks_embeddings,
+        documents=chunks,
+    )
+    logger.info("Successfully loaded embeddings in the Chroma.")
+
+
+if __name__ == "__main__":
+    load_data()
