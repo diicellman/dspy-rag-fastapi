@@ -1,13 +1,9 @@
 """Load data functions."""
 
 import logging
-import os
 import re
-from typing import Dict
 import chromadb
 from chromadb import Documents, EmbeddingFunction, Embeddings
-
-DATA_DIR = "data"
 
 
 class OllamaEmbeddingFunction(EmbeddingFunction[Documents]):
@@ -16,7 +12,9 @@ class OllamaEmbeddingFunction(EmbeddingFunction[Documents]):
     It requires a host url and a model name. The default model name is "nomic-embed-text".
     """
 
-    def __init__(self, host: str, model_name: str = "nomic-embed-text"):
+    def __init__(
+        self, host: str = "http://localhost:11434", model_name: str = "nomic-embed-text"
+    ):
         try:
             import ollama
         except ImportError:
@@ -66,7 +64,7 @@ def load_data() -> None:
         chunks.extend(sentences)
 
     logger.info("Creating embeddings.")
-    ollama_ef = OllamaEmbeddingFunction(host="http://localhost:11434")
+    ollama_ef = OllamaEmbeddingFunction()
     chunks_embeddings = ollama_ef(chunks)
 
     db = chromadb.PersistentClient(path="../../data/chroma_db")
