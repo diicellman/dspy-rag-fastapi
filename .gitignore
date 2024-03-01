@@ -160,4 +160,6 @@ cython_debug/
 #.idea/
 
 # Local files
+data/chroma_db
+data/checkpoints
 *.DS_store
