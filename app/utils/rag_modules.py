@@ -81,7 +81,7 @@ def compile_rag() -> Dict:
     compiled_rag = teleprompter.compile(RAG(), trainset=trainset)
 
     # Saving
-    compiled_rag.save(f"{DATA_DIR}/checkpoints/compiled_rag.json")
+    compiled_rag.save(f"{DATA_DIR}/compiled_rag.json")
 
     return {"message": "Successfully compiled RAG program!"}
 
@@ -89,6 +89,6 @@ def compile_rag() -> Dict:
 def get_compiled_rag():
     # Loading:
     rag = RAG()
-    rag.load(f"{DATA_DIR}/checkpoints/compiled_rag.json")
+    rag.load(f"{DATA_DIR}/compiled_rag.json")
 
     return rag
