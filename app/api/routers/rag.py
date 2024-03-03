@@ -4,10 +4,10 @@ from fastapi import APIRouter
 
 from app.utils.rag_modules import RAG, get_compiled_rag, compile_rag
 
-chat_router = APIRouter()
+rag_router = APIRouter()
 
 
-@chat_router.get("/zero-shot-query")
+@rag_router.get("/zero-shot-query")
 async def zero_shot_query(query: str):
     rag = RAG()
     pred = rag(query)
@@ -19,7 +19,7 @@ async def zero_shot_query(query: str):
     }
 
 
-@chat_router.get("/compiled-query")
+@rag_router.get("/compiled-query")
 async def compiled_query(query: str):
     compiled_rag = get_compiled_rag()
     pred = compiled_rag(query)
@@ -31,6 +31,6 @@ async def compiled_query(query: str):
     }
 
 
-@chat_router.post("/compile-program")
+@rag_router.post("/compile-program")
 async def compile_program():
     return compile_rag()

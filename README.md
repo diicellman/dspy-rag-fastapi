@@ -29,6 +29,7 @@ This local setup not only enhances data security and privacy but also provides d
 
 - Docker
 - Git (optional, for cloning the repository)
+- Ollama,  follow the [readme](https://github.com/ollama/ollama) to set up and run a local Ollama instance.
 
 ### Clone the Repository
 
@@ -66,9 +67,9 @@ After starting the FastAPI server, you can interact with the API endpoints as fo
 
 | Method | Endpoint             | Description                        | Example                                                                                      |
 |--------|----------------------|------------------------------------|----------------------------------------------------------------------------------------------|
-| GET    | `/zero-shot-query`   | Perform a zero-shot query.         | `curl http://localhost:8000/api/chat/zero-shot-query?query=<your-query>`                                   |
-| GET    | `/compiled-query`    | Get a compiled query.              | `curl http://localhost:8000/api/chat/compiled-query?query=<your-query>`                                    |
-| POST   | `/compile-program`   | Compile a DSPy program.            | `curl -X POST http://localhost:8000/api/chat/compile-program -H "Content-Type: application/json" -d '{"program": "<your-program>"}'` |
+| GET    | `/zero-shot-query`   | Perform a zero-shot query.         | `curl http://localhost:8000/api/rag/zero-shot-query?query=<your-query>`                                   |
+| GET    | `/compiled-query`    | Get a compiled query.              | `curl http://localhost:8000/api/rag/compiled-query?query=<your-query>`                                    |
+| POST   | `/compile-program`   | Compile a DSPy program.            | `curl -X POST http://localhost:8000/api/rag/compile-program -H "Content-Type: application/json" -d '{"program": "<your-program>"}'` |
 
 Ensure to replace `<your-query>` and `<your-program>` with the actual query and DSPy program you wish to execute.
 
