@@ -48,7 +48,13 @@ poetry config virtualenvs.in-project true
 poetry install
 poetry shell
 ```
-Then run this command:
+
+Run this command to create embeddings of data located in data/example folder:
+```bash
+python app/utils/load.py
+```
+
+Then run this command to start the FastAPI server:
 ```bash
 python main.py
 ```
