@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dspy-rag-fastapi"
-version = "0.1.0"
+version = "0.2.0"
 description = "FastAPI wrapper around dspy"
 authors = ["diicell"]
 license = "MIT"
@@ -13,6 +13,9 @@ fastapi = "^0.110.0"
 uvicorn = {extras = ["standard"], version = "^0.27.1"}
 chromadb = "^0.4.24"
 dspy-ai = "^2.3.6"
+arize-phoenix = "^3.4.1"
+openinference-instrumentation-dspy = "^0.1.2"
+opentelemetry-exporter-otlp = "^1.23.0"
 
 
 [build-system]

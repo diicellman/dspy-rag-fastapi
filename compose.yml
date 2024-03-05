@@ -1,0 +1,18 @@
+services:
+  phoenix:
+    image: arizephoenix/phoenix:latest
+    ports:
+      - "6006:6006"
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - COLLECTOR_ENDPOINT=http://phoenix:6006/v1/traces
+      # Set INSTRUMENT_LLAMA_INDEX=false to disable instrumentation
+      - INSTRUMENT_LLAMA_INDEX=true
+      # Set your ollama base url 
+      - OLLAMA_BASE_URL=http://<your_address>:11434
+      - OLLAMA_MODEL_NAME=<your_model_name>

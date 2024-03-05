@@ -2,9 +2,15 @@
 
 from fastapi import APIRouter
 
-from app.utils.rag_modules import RAG, get_compiled_rag, compile_rag
+from app.utils.rag_modules import RAG, compile_rag, get_compiled_rag
 
 rag_router = APIRouter()
+
+
+@rag_router.get("/healthcheck")
+async def healthcheck():
+
+    return {"message": "Thanks for playing."}
 
 
 @rag_router.get("/zero-shot-query")

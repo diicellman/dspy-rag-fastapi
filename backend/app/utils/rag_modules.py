@@ -1,16 +1,24 @@
 """DSPy functions."""
 
+import os
+
 import dspy
+from dotenv import load_dotenv
 from dspy.retrieve.chromadb_rm import ChromadbRM
 from dspy.teleprompt import BootstrapFewShot
+
 from app.utils.load import OllamaEmbeddingFunction
+
+load_dotenv()
 
 from typing import Dict
 
 DATA_DIR = "data"
+ollama_base_url = os.getenv("OLLAMA_BASE_URL", "localhost")
+ollama_model_name = os.getenv("OLLAMA_MODEL_NAME", "phi")
 # Global settings
-ollama_lm = dspy.OllamaLocal(model="phi:latest")
-ollama_embedding_function = OllamaEmbeddingFunction()
+ollama_lm = dspy.OllamaLocal(model=ollama_model_name, base_url=ollama_base_url)
+ollama_embedding_function = OllamaEmbeddingFunction(host=ollama_base_url)
 
 retriever_model = ChromadbRM(
     "quickstart",

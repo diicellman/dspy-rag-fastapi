@@ -1,12 +1,19 @@
 """Load data functions."""
 
 import logging
+import os
 import re
+
 import chromadb
 from chromadb import Documents, EmbeddingFunction, Embeddings
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
+DATA_DIR = "data"
+ollama_base_url = os.getenv("OLLAMA_BASE_URL", "localhost")
 
 
 # Custom Embedding function that supports Ollama embeddings
@@ -60,7 +67,7 @@ def load_data() -> None:
     # Split document into single sentences
     chunks = []
     with open(
-        "../../data/example/paul_graham_essay.txt", "r", encoding="utf-8"
+        f"{DATA_DIR}/example/paul_graham_essay.txt", "r", encoding="utf-8"
     ) as file:
         text = file.read()
         sentences = re.split(r"(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s", text)
@@ -68,10 +75,10 @@ def load_data() -> None:
         chunks.extend(sentences)
 
     logger.info("Creating embeddings.")
-    ollama_ef = OllamaEmbeddingFunction()
+    ollama_ef = OllamaEmbeddingFunction(host=ollama_base_url)
     chunks_embeddings = ollama_ef(chunks)
 
-    db = chromadb.PersistentClient(path="../../data/chroma_db")
+    db = chromadb.PersistentClient(path=f"{DATA_DIR}/chroma_db")
     chroma_collection = db.get_or_create_collection("quickstart")
 
     logger.info("Loading data in Chroma.")
