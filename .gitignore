@@ -163,3 +163,4 @@ cython_debug/
 backend/data/chroma_db
 backend/data/*.json
 *.DS_store
+*/.streamlit

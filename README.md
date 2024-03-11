@@ -1,29 +1,29 @@
-# FastAPI Wrapper for DSPy
+# Full-Stack DSPy Application with FastAPI and Streamlit
 
 ## Introduction
 
-This project is a [FastAPI](https://github.com/tiangolo/fastapi) wrapper designed to integrate with the [DSPy](https://github.com/stanfordnlp/dspy) framework developed by StanfordNLP, offering a straightforward example of building a FastAPI backend with DSPy capabilities. Uniquely, this implementation is fully local, utilizing [Ollama](https://github.com/ollama/ollama) for both the language and embedding models, [Chroma DB](https://github.com/chroma-core/chroma) for vector storage, and [Arize Phoenix](https://github.com/Arize-ai/phoenix) for an observability layer. This setup ensures that all operations, from querying to data storage, are performed on the local machine without the need for external cloud services, enhancing privacy and data security.
+This project is a full-stack application designed to leverage natural language processing capabilities entirely locally and to integrate with the [DSPy](https://github.com/stanfordnlp/dspy) framework developed by StanfordNLP. It features a [FastAPI](https://github.com/tiangolo/fastapi) backend for processing and a [Streamlit](https://streamlit.io) frontend for interactive user interfaces. This implementation is fully local, integrating cutting-edge technologies such as [Ollama](https://github.com/ollama/ollama) for language and embedding models, [Chroma DB](https://github.com/chroma-core/chroma) for vector storage, and [Arize Phoenix](https://github.com/Arize-ai/phoenix) for observability. This setup ensures all operations, from processing to data storage, are executed on the local machine, enhancing privacy, data security, and ease of use.
 
 ## Features
 
-- **Local Execution**: Everything runs on your local machine, ensuring data privacy and security. No external cloud services are involved.
-- **Ollama Integration**: Leverages Ollama with the phi-2 language model and nomic embedding model by default. However, now with configurable LLM support, allowing users to specify the desired language model in the .env file or Docker Compose file.
-- **Chroma DB for Vector Storage**: Uses Chroma DB for efficient and scalable vector storage, facilitating fast and accurate retrieval of information.
-- **Arize Phoenix**: Incorporates Arize Phoenix for observability, offering real-time monitoring and analytics to track and improve model performance and system health.
-- **Zero-shot-query**: Allows users to perform zero-shot queries using DSPy through a simple GET request.
-- **Compiled-query**: Enables the compilation of queries for optimized execution, accessible via GET.
-- **Compile-program**: Offers an interface for compiling DSPy programs through a POST request, facilitating more complex interactions with the language model.
+- **Fully Local Execution**: Ensures privacy and security by running all processes on your local machine without external dependencies.
+- **Ollama Integration**: Leverages the powerful Ollama for language and embedding models.
+- **Chroma DB Vector Storage**: Utilizes Chroma DB for efficient, scalable vector storage, enabling quick and precise information retrieval.
+- **Arize Phoenix Observability**: Integrates Arize Phoenix for real-time monitoring and analytics, aiding in performance improvement and system health tracking.
+- **FastAPI Backend**: Offers robust and scalable API endpoints for interacting with the NLP models and performing various queries and compilations.
+- **Streamlit Frontend**: Provides an intuitive and interactive UI for users to easily interact with the backend services, improving the overall user experience.
 
 ## Architecture
 
-The FastAPI wrapper integrates DSPy with Ollama, Arize Phoenix and Chroma DB in a seamless manner, providing a robust backend for applications requiring advanced natural language processing and data retrieval capabilities. Here's how the components interact within our local setup:
+This full-stack application combines the DSPy Framework with Ollama, Arize Phoenix, and Chroma DB in a cohesive ecosystem. Here's a brief overview of the system components:
 
-- **DSPy Framework**: Handles the optimization of language model prompts and weights, offering a sophisticated interface for programming with language models.
-- **Ollama**: Serves as the backend for both the language model and the embedding model, enabling powerful and efficient natural language understanding and generation.
-- **Chroma DB**: Acts as the vector store, allowing for efficient storage and retrieval of high-dimensional data vectors, which is crucial for tasks such as semantic search and similarity matching.
-- **Arize Phoenix**: Phoenix makes your DSPy applications observable by visualizing the underlying structure of each call to your compiled DSPy module.
+- **DSPy Framework**: Serves as the core for language model interactions, offering advanced NLP capabilities.
+- **Ollama**: Acts as the backend engine for language understanding and generation.
+- **Chroma DB**: Provides efficient vector storage solutions, essential for NLP tasks like semantic search.
+- **Arize Phoenix**: Enhances visibility into the application's performance and health.
+- **FastAPI**: Facilitates the backend logic, handling API requests and responses.
+- **Streamlit**: Creates the frontend interface, enabling users to engage with the backend services visually.
 
-This local setup not only enhances data security and privacy but also provides developers with a flexible and powerful environment for building advanced NLP applications.
 
 ## Installation
 
@@ -43,6 +43,7 @@ cd dspy-rag-fastapi
 ```
 ### Getting Started with Local Development
 
+#### Backend setup
 First, navigate to the backend directory:
 ```bash
 cd backend/
@@ -62,7 +63,6 @@ ENVIRONMENT=<your_environment_value>
 INSTRUMENT_DSPY=<true or false>
 COLLECTOR_ENDPOINT=<your_arize_phoenix_endpoint>
 OLLAMA_BASE_URL=<your_ollama_instance_endpoint>
-OLLAMA_MODEL_NAME=<your_llm_model_name>
 ```
 Third, run this command to create embeddings of data located in data/example folder:
 ```bash
@@ -73,6 +73,31 @@ Then run this command to start the FastAPI server:
 ```bash
 python main.py
 ```
+
+#### Frontend setup
+First, navigate to the frontend directory:
+```bash
+cd frontend/
+```
+
+Second, setup the environment:
+
+```bash
+poetry config virtualenvs.in-project true
+poetry install
+poetry shell
+```
+Specify your environment variables in an .env file in backend directory.
+Example .env file:
+```yml
+FASTAPI_BACKEND_URL = <your_fastapi_address>
+```
+
+Then run this command to start the Streamlit application:
+```bash
+streamlit run about.py
+```
+
 ### Getting Started with Docker-Compose
 This project now supports Docker Compose for easier setup and deployment, including backend services and Arize Phoenix for query tracing. 
 
@@ -80,20 +105,13 @@ This project now supports Docker Compose for easier setup and deployment, includ
 2. Ensure that Docker is installed and running.
 3. Run the command `docker-compose -f compose.yml up` to spin up services for the backend, and Phoenix.
 4. Backend docs can be viewed using the [OpenAPI](http://0.0.0.0:8000/docs).
-5. Traces can be viewed using the [Phoenix UI](http://0.0.0.0:6006).
+5. Frontend can be viewed using [Streamlit](http://0.0.0.0:8501)
+6. Traces can be viewed using the [Phoenix UI](http://0.0.0.0:6006).
 7. When you're finished, run `docker compose down` to spin down the services.
 
 ## Usage
 
-After starting the FastAPI server, you can interact with the API endpoints as follows:
-
-| Method | Endpoint             | Description                        | Example                                                                                      |
-|--------|----------------------|------------------------------------|----------------------------------------------------------------------------------------------|
-| GET    | `/zero-shot-query`   | Perform a zero-shot query.         | `curl http://<your_address>:8000/api/rag/zero-shot-query?query=<your-query>`                                   |
-| GET    | `/compiled-query`    | Get a compiled query.              | `curl http://<your_address>:8000/api/rag/compiled-query?query=<your-query>`                                    |
-| POST   | `/compile-program`   | Compile a DSPy program.            | `curl -X POST http://<your_address>:8000/api/rag/compile-program -H "Content-Type: application/json" -d ''` |
-
-Ensure to replace `<your-query>` and `<your-program>` with the actual query and DSPy program you wish to execute.
+The FastAPI and Streamlit integration allows for seamless interaction between the user and the NLP backend. Utilize the FastAPI endpoints for NLP tasks and visualize results and interact with the system through the Streamlit frontend.
 
 
 ## Contributing

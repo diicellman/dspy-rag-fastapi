@@ -1,8 +1,13 @@
 """Endpoints."""
 
 from fastapi import APIRouter
-
-from app.utils.rag_modules import RAG, compile_rag, get_compiled_rag
+from app.utils.models import MessageData, RAGResponse, QAList
+from app.utils.rag_functions import (
+    get_zero_shot_query,
+    get_compiled_rag,
+    compile_rag,
+    get_list_ollama_models,
+)
 
 rag_router = APIRouter()
 
@@ -13,30 +18,23 @@ async def healthcheck():
     return {"message": "Thanks for playing."}
 
 
-@rag_router.get("/zero-shot-query")
-async def zero_shot_query(query: str):
-    rag = RAG()
-    pred = rag(query)
-
-    return {
-        "question": query,
-        "predicted answer": pred.answer,
-        "retrieved contexts (truncated)": [c[:200] + "..." for c in pred.context],
-    }
+@rag_router.get("/list-models")
+async def list_models():
+    return get_list_ollama_models()
 
 
-@rag_router.get("/compiled-query")
-async def compiled_query(query: str):
-    compiled_rag = get_compiled_rag()
-    pred = compiled_rag(query)
+@rag_router.post("/zero-shot-query", response_model=RAGResponse)
+async def zero_shot_query(payload: MessageData):
+    return get_zero_shot_query(payload=payload)
 
-    return {
-        "question": query,
-        "predicted answer": pred.answer,
-        "retrieved contexts (truncated)": [c[:200] + "..." for c in pred.context],
-    }
+
+@rag_router.post("/compiled-query", response_model=RAGResponse)
+async def compiled_query(payload: MessageData):
+    return get_compiled_rag(payload=payload)
 
 
 @rag_router.post("/compile-program")
-async def compile_program():
-    return compile_rag()
+async def compile_program(qa_list: QAList):
+
+    print(qa_list)
+    return compile_rag(qa_items=qa_list)

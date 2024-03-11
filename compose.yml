@@ -15,4 +15,11 @@ services:
       - INSTRUMENT_DSPY=true
       # Set your ollama base url 
       - OLLAMA_BASE_URL=http://<your_address>:11434
-      - OLLAMA_MODEL_NAME=<your_model_name>
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      - FASTAPI_BACKEND_URL=http://backend:8000
